@@ -9,11 +9,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Permitir conexiones desde el frontend (Vercel)
+# Configuración CORS simple y funcional
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -142,6 +142,20 @@ def root():
 def health_check():
     """Verificar que el servidor está funcionando"""
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+
+@app.get("/test")
+def test_endpoint():
+    """Endpoint de prueba con datos estáticos para verificar CORS"""
+    return {
+        "timestamp": datetime.now().isoformat(),
+        "count": 3,
+        "stocks": [
+            {"symbol": "AAPL", "name": "Apple Inc.", "price": 185.50, "change": 2.30, "changePercent": 1.25},
+            {"symbol": "MSFT", "name": "Microsoft", "price": 378.20, "change": -1.50, "changePercent": -0.40},
+            {"symbol": "NVDA", "name": "NVIDIA", "price": 456.80, "change": 5.20, "changePercent": 1.15}
+        ]
+    }
 
 
 @app.get("/stock/{symbol}")
